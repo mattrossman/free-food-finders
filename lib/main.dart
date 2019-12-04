@@ -66,10 +66,33 @@ class AddEventButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        // Add your onPressed code here!
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddEvent()),
+        );
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.green,
     );
   }
+}
+
+class AddEvent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Event'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
+      )
+    );
+  }
+  
 }
