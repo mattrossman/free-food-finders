@@ -25,7 +25,7 @@ class RandomWords extends StatefulWidget {
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _biggerFont = const TextStyle(fontSize: 18.0);
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +33,7 @@ class RandomWordsState extends State<RandomWords> {
         title: Text('Startup Name Generator'),
       ),
       body: _buildSuggestions(),
+      floatingActionButton: AddEventButton()
     );
   }
 
@@ -56,6 +57,19 @@ class RandomWordsState extends State<RandomWords> {
         pair.asPascalCase,
         style: _biggerFont,
       ),
+    );
+  }
+}
+
+class AddEventButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        // Add your onPressed code here!
+      },
+      child: Icon(Icons.add),
+      backgroundColor: Colors.green,
     );
   }
 }
