@@ -111,6 +111,14 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+
+  String validateRequired(value) {
+    if (value.isEmpty) {
+      return '*Missing Required Information';
+    }
+    return null;
+  } 
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -126,60 +134,35 @@ class MyCustomFormState extends State<MyCustomForm> {
                 icon: Icon(Icons.star),
                 labelText: 'Name:'
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*Missing Required Information';
-                }
-                return null;
-              },
+              validator: validateRequired
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.location_city),
                 labelText: 'Location:'
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*Missing Required Information';
-                }
-                return null;
-              },
+              validator: validateRequired
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.event),
                 labelText: 'Date:'
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*Missing Required Information';
-                }
-                return null;
-              },
+              validator: validateRequired
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.timer),
                 labelText: 'Time:'
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*Missing Required Information';
-                }
-                return null;
-              },
+              validator: validateRequired
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.description),
                 labelText: 'Description:'
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*Missing Required Information';
-                }
-                return null;
-              },
+              validator: validateRequired
             ),
             RaisedButton(
               child: new Text('Vegan'),
