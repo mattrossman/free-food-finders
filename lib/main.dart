@@ -66,20 +66,28 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('Fetch Data Example'),
         ),
-        body: Center(
-          child: FutureBuilder<List<User>>(
-            future: users,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data[0].name);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+        body: FutureBuilder<List<User>>(
+          future: users,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                children: ListTile.divideTiles(
+                  context: context,
+                  tiles: snapshot.data.map((user) => 
+                    ListTile(
+                      title: Text(user.name),
+                      subtitle: Text('Age: ${user.age}'),
+                    )
+                  )
+                ).toList(),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
 
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
-            },
-          ),
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
+          },
         ),
       ),
     );
@@ -103,6 +111,7 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
+  Future<List<User>> users;
 
   @override
   Widget build(BuildContext context) {
