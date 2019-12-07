@@ -116,94 +116,97 @@ class MyCustomFormState extends State<MyCustomForm> {
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.star),
-              labelText: 'Name:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.location_city),
-              labelText: 'Location:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.event),
-              labelText: 'Date:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.timer),
-              labelText: 'Time:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.description),
-              labelText: 'Description:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          RaisedButton(
-            child: new Text('Vegan'),
-            textColor: Colors.black,
-            shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0),
-            ),
-          color: pressAttention ? Colors.white : Colors.green,
-          onPressed: () => setState(() => pressAttention = !pressAttention),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Created Event!')));
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.star),
+                labelText: 'Name:'
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '*Missing Required Information';
                 }
+                return null;
               },
-              child: Text('Submit'),
             ),
-          ),
-        ],
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.location_city),
+                labelText: 'Location:'
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '*Missing Required Information';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.event),
+                labelText: 'Date:'
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '*Missing Required Information';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.timer),
+                labelText: 'Time:'
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '*Missing Required Information';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.description),
+                labelText: 'Description:'
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '*Missing Required Information';
+                }
+                return null;
+              },
+            ),
+            RaisedButton(
+              child: new Text('Vegan'),
+              textColor: Colors.black,
+              shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0),
+              ),
+            color: pressAttention ? Colors.white : Colors.green,
+            onPressed: () => setState(() => pressAttention = !pressAttention),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              child: RaisedButton(
+                onPressed: () {
+                  // Validate returns true if the form is valid, or false
+                  // otherwise.
+                  if (_formKey.currentState.validate()) {
+                    // If the form is valid, display a Snackbar.
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text('Created Event!')));
+                  }
+                },
+                child: Text('Submit'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -215,14 +218,7 @@ class AddEvent extends StatelessWidget {
       appBar: AppBar(
         title: Text('Create Event'),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: MyCustomForm(),
-        ),
-      )
+      body: MyCustomForm(),
     );
   }
   
