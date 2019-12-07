@@ -1,7 +1,6 @@
 // Copyright 2018 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'database.dart' as data;
@@ -19,11 +18,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<List<data.User>> users;
+  Future<List<data.FoodEvent>> events;
 
   @override
   void initState() {
     super.initState();
-    users = data.fetchUsers();
+    // users = data.fetchUsers();
+    events = data.fetchFoodEvents();
   }
 
   @override
@@ -37,8 +38,9 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('Fetch Data Example'),
         ),
-        body: FutureBuilder<List<data.User>>(
-          future: users,
+        floatingActionButton: AddEventButton(),
+        body: FutureBuilder<List<data.FoodEvent>>(
+          future: events,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
                   tiles: snapshot.data.map((user) => 
                     ListTile(
                       title: Text(user.name),
-                      subtitle: Text('Age: ${user.age}'),
+                      subtitle: Text(user.location),
                     )
                   )
                 ).toList(),
@@ -82,7 +84,6 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
-  Future<List<User>> users;
 
   @override
   Widget build(BuildContext context) {
