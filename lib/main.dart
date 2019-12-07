@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'database.dart' as data;
 
 
@@ -54,12 +55,16 @@ class _MyAppState extends State<MyApp> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView(
-                  children: snapshot.data.map((user) => Card(
-                    child: ListTile(
-                      title: Text(user.name),
-                      subtitle: Text(user.location)
-                    )
-                  )).toList()
+                  children: snapshot.data.map((event) {
+                    String date = DateFormat.MMMEd().format(event.timestamp);
+                    String time = DateFormat.jm().format(event.timestamp);
+                    return Card(
+                      child: ListTile(
+                        title: Text('${event.name}'),
+                        subtitle: Text('$date at $time - ${event.location}')
+                      )
+                    );
+                  }).toList()
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
