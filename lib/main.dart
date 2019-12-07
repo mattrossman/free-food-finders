@@ -16,11 +16,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<List<data.FoodEvent>> events;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
     events = data.fetchFoodEvents();
+  }
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+
+    setState(() {
+      events = data.fetchFoodEvents();
+    });
+
+    return null;
   }
 
   @override
@@ -35,25 +46,29 @@ class _MyAppState extends State<MyApp> {
           title: Text('Events'),
         ),
         floatingActionButton: AddEventButton(),
-        body: FutureBuilder<List<data.FoodEvent>>(
-          future: events,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                children: snapshot.data.map((user) => Card(
-                  child: ListTile(
-                    title: Text(user.name),
-                    subtitle: Text(user.location)
-                  )
-                )).toList()
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+        body: RefreshIndicator(
+          key: refreshKey,
+          onRefresh: refreshList,
+          child: FutureBuilder<List<data.FoodEvent>>(
+            future: events,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  children: snapshot.data.map((user) => Card(
+                    child: ListTile(
+                      title: Text(user.name),
+                      subtitle: Text(user.location)
+                    )
+                  )).toList()
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
-            // By default, show a loading spinner.
-            return CircularProgressIndicator();
-          },
+              // By default, show a loading spinner.
+              return CircularProgressIndicator();
+            },
+          ),
         ),
       ),
     );
