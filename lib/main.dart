@@ -8,7 +8,6 @@ import 'database.dart' as data;
 
 
 void main() => runApp(MyApp());
-bool pressAttention = false;
 
 class MyApp extends StatefulWidget {
   @override
@@ -164,16 +163,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               validator: validateRequired
             ),
-            RaisedButton(
-              child: new Text('Vegan'),
-              textColor: Colors.black,
-              shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0),
-              ),
-            color: pressAttention ? Colors.white : Colors.green,
-            onPressed: () => setState(() => pressAttention = !pressAttention),
-            ),
-            CastFilter(),
+            EventTags(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50.0),
               child: RaisedButton(
@@ -196,41 +186,40 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
-class ActorFilterEntry {
-  const ActorFilterEntry(this.name, this.initials);
+class EventTagEntry {
+  const EventTagEntry(this.name, this.id);
   final String name;
-  final String initials;
+  final String id;
 }
 
-class CastFilter extends StatefulWidget {
+class EventTags extends StatefulWidget {
   @override
-  State createState() => CastFilterState();
+  State createState() => EventTagsState();
 }
 
-class CastFilterState extends State<CastFilter> {
-  final List<ActorFilterEntry> _cast = <ActorFilterEntry>[
-    const ActorFilterEntry('Aaron Burr', 'AB'),
-    const ActorFilterEntry('Alexander Hamilton', 'AH'),
-    const ActorFilterEntry('Eliza Hamilton', 'EH'),
-    const ActorFilterEntry('James Madison', 'JM'),
+class EventTagsState extends State<EventTags> {
+  final List<EventTagEntry> _tagEntries = <EventTagEntry>[
+    const EventTagEntry('Gluten Free', 'GF'),
+    const EventTagEntry('Vegan', 'V'),
+    const EventTagEntry('Vegetarian', 'VG')
   ];
-  List<String> _filters = <String>[];
+  List<String> _tags = <String>[];
 
   Iterable<Widget> get actorWidgets sync* {
-    for (ActorFilterEntry actor in _cast) {
+    for (EventTagEntry tag in _tagEntries) {
       yield Padding(
         padding: const EdgeInsets.all(4.0),
         child: FilterChip(
-          avatar: CircleAvatar(child: Text(actor.initials)),
-          label: Text(actor.name),
-          selected: _filters.contains(actor.name),
+          // avatar: CircleAvatar(child: Text(tag.id)),
+          label: Text(tag.name),
+          selected: _tags.contains(tag.id),
           onSelected: (bool value) {
             setState(() {
               if (value) {
-                _filters.add(actor.name);
+                _tags.add(tag.id);
               } else {
-                _filters.removeWhere((String name) {
-                  return name == actor.name;
+                _tags.removeWhere((String id) {
+                  return id == tag.id;
                 });
               }
             });
@@ -242,14 +231,8 @@ class CastFilterState extends State<CastFilter> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Wrap(
-          children: actorWidgets.toList(),
-        ),
-        Text('Look for: ${_filters.join(', ')}'),
-      ],
+    return Wrap(
+      children: actorWidgets.toList(),
     );
   }
 }
