@@ -2,57 +2,28 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
-Future<List<User>> fetchUsers() async {
-  final response =
-      await http.get('https://www.jsonstore.io/959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476/users');
-
-  if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON.
-    List<dynamic> res = json.decode(response.body)['result'];
-    return res.map((user) => User.fromJson(user)).toList();
-  } else {
-    // If that response was not OK, throw an error.
-    throw Exception('Failed to load post');
-  }
-}
-
-class User {
-  final String name;
-  final int age;
-
-  User({this.name, this.age});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      name: json['name'],
-      age: json['age'],
-    );
-  }
-}
+import 'database.dart' as data;
 
 
 void main() => runApp(MyApp());
 bool pressAttention = false;
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
+  // MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<User>> users;
+  Future<List<data.User>> users;
 
   @override
   void initState() {
     super.initState();
-    users = fetchUsers();
+    users = data.fetchUsers();
   }
 
   @override
@@ -66,7 +37,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('Fetch Data Example'),
         ),
-        body: FutureBuilder<List<User>>(
+        body: FutureBuilder<List<data.User>>(
           future: users,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
