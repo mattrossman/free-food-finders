@@ -30,25 +30,204 @@ class RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Startup Name Generator'),
+        title: Text('Free Food Events'),
       ),
-      body: _buildSuggestions(),
+      body: _getEvents(),
       floatingActionButton: AddEventButton()
     );
   }
 
-  Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return Divider(); /*2*/
+  Widget _getEvents() {
+    var _events = ListView(
+      children: <Widget>[
+        ListTile(
+          title: Text('MONDAY')
+        ),
+        Card(
+          child: ListTile(
+          title: Text('Breakfast at Craigs Place'),
+          subtitle: Text('Date: Nov 1  Time: 7AM'),
+        ),
+        ),
 
-          final index = i ~/ 2; /*3*/
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10)); /*4*/
-          }
-          return _buildRow(_suggestions[index]);
-        });
+        Card(
+          child: ListTile(
+          title: Text('Community Breakfast at UUSA'),
+          subtitle: Text('Date: Nov 1  Time: 8-10AM'),
+        ),
+        ),
+
+        Card(
+          child: ListTile(
+          title: Text('Lunch - Amherst Senior Center'),
+          subtitle: Text('Date: Nov 1  Time: 11:45AM - 12:15PM'),
+        ),
+        ),
+
+        Card(
+          child: ListTile(
+          title: Text('Fresh Food Distribution - Amherst Survival Center'),
+          subtitle: Text('Date: Nov 1  Time: 12:30PM - 7PM'),
+        ),
+        ),
+
+        Card(
+          child: ListTile(
+          title: Text('Dinner at Craigs Place'),
+          subtitle: Text('Date: Nov 1  Time: 7:30PM - 9PM'),
+        )
+        ),
+        ListTile(
+          title: Text('TUESDAY'),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Breakfast at Craigs Place'),
+            subtitle: Text('Date: Nov 2  Time: 7AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Community Breakfast at UUSA'),
+            subtitle: Text('Date: Nov 2  Time: 8-10AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Lunch - Amherst Senior Center'),
+            subtitle: Text('Date: Nov 2  Time: 11:45AM - 12:15PM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Fresh Food Distribution - Amherst Survival Center'),
+            subtitle: Text('Date: Nov 2  Time: 12:30PM - 7PM'),
+          ),
+        ),
+
+        Card(
+            child: ListTile(
+              title: Text('Dinner at Craigs Place'),
+              subtitle: Text('Date: Nov 2  Time: 7:30PM - 9PM'),
+            )
+        ),
+        ListTile(
+          title: Text('WEDNESDAY')
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Breakfast at Craigs Place'),
+            subtitle: Text('Date: Nov 3  Time: 7AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Community Breakfast at UUSA'),
+            subtitle: Text('Date: Nov 3  Time: 8-10AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Lunch - Amherst Senior Center'),
+            subtitle: Text('Date: Nov 3  Time: 11:45AM - 12:15PM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Fresh Food Distribution - Amherst Survival Center'),
+            subtitle: Text('Date: Nov 3  Time: 12:30PM - 7PM'),
+          ),
+        ),
+
+        Card(
+            child: ListTile(
+              title: Text('Dinner at Craigs Place'),
+              subtitle: Text('Date: Nov 3  Time: 7:30PM - 9PM'),
+            )
+        ),
+        ListTile(
+          title: Text('THURSDAY'),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Breakfast at Craigs Place'),
+            subtitle: Text('Date: Nov 4  Time: 7AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Community Breakfast at UUSA'),
+            subtitle: Text('Date: Nov 4  Time: 8-10AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Lunch - Amherst Senior Center'),
+            subtitle: Text('Date: Nov 4  Time: 11:45AM - 12:15PM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Fresh Food Distribution - Amherst Survival Center'),
+            subtitle: Text('Date: Nov 4  Time: 12:30PM - 7PM'),
+          ),
+        ),
+
+        Card(
+            child: ListTile(
+              title: Text('Dinner at Craigs Place'),
+              subtitle: Text('Date: Nov 4  Time: 7:30PM - 9PM'),
+            )
+        ),
+        ListTile(
+          title: Text('FRIDAY'),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Breakfast at Craigs Place'),
+            subtitle: Text('Date: Nov 5  Time: 7AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Community Breakfast at UUSA'),
+            subtitle: Text('Date: Nov 5  Time: 8-10AM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Lunch - Amherst Senior Center'),
+            subtitle: Text('Date: Nov 5  Time: 11:45AM - 12:15PM'),
+          ),
+        ),
+
+        Card(
+          child: ListTile(
+            title: Text('Fresh Food Distribution - Amherst Survival Center'),
+            subtitle: Text('Date: Nov 5  Time: 12:30PM - 7PM'),
+          ),
+        ),
+
+        Card(
+            child: ListTile(
+              title: Text('Dinner at Craigs Place'),
+              subtitle: Text('Date: Nov 5  Time: 7:30PM - 9PM'),
+            )
+        ),
+      ],
+    );
+    return _events;
   }
 
   Widget _buildRow(WordPair pair) {
