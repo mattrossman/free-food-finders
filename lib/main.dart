@@ -3,239 +3,78 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:intl/intl.dart';
+import 'database.dart' as data;
+
 
 void main() => runApp(MyApp());
 bool pressAttention = false;
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<List<data.FoodEvent>> events;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    events = data.fetchFoodEvents();
+  }
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+
+    setState(() {
+      events = data.fetchFoodEvents();
+    });
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: RandomWords(),
-    );
-  }
-}
-
-class RandomWords extends StatefulWidget {
-  @override
-  RandomWordsState createState() => RandomWordsState();
-}
-
-class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Free Food Events'),
+      title: 'Free Food Finder',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: _getEvents(),
-      floatingActionButton: AddEventButton()
-    );
-  }
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Events'),
+        ),
+        floatingActionButton: AddEventButton(),
+        body: RefreshIndicator(
+          key: refreshKey,
+          onRefresh: refreshList,
+          child: FutureBuilder<List<data.FoodEvent>>(
+            future: events,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  children: snapshot.data.map((event) {
+                    String date = DateFormat.MMMEd().format(event.timestamp);
+                    String time = DateFormat.jm().format(event.timestamp);
+                    return Card(
+                      child: ListTile(
+                        title: Text('${event.name}'),
+                        subtitle: Text('$date at $time - ${event.location}')
+                      )
+                    );
+                  }).toList()
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
-  Widget _getEvents() {
-    var _events = ListView(
-      children: <Widget>[
-        ListTile(
-          title: Text('MONDAY')
-        ),
-        Card(
-          child: ListTile(
-          title: Text('Breakfast at Craigs Place'),
-          subtitle: Text('Date: Nov 1  Time: 7AM'),
-        ),
-        ),
-
-        Card(
-          child: ListTile(
-          title: Text('Community Breakfast at UUSA'),
-          subtitle: Text('Date: Nov 1  Time: 8-10AM'),
-        ),
-        ),
-
-        Card(
-          child: ListTile(
-          title: Text('Lunch - Amherst Senior Center'),
-          subtitle: Text('Date: Nov 1  Time: 11:45AM - 12:15PM'),
-        ),
-        ),
-
-        Card(
-          child: ListTile(
-          title: Text('Fresh Food Distribution - Amherst Survival Center'),
-          subtitle: Text('Date: Nov 1  Time: 12:30PM - 7PM'),
-        ),
-        ),
-
-        Card(
-          child: ListTile(
-          title: Text('Dinner at Craigs Place'),
-          subtitle: Text('Date: Nov 1  Time: 7:30PM - 9PM'),
-        )
-        ),
-        ListTile(
-          title: Text('TUESDAY'),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Breakfast at Craigs Place'),
-            subtitle: Text('Date: Nov 2  Time: 7AM'),
+              // By default, show a loading spinner.
+              return CircularProgressIndicator();
+            },
           ),
         ),
-
-        Card(
-          child: ListTile(
-            title: Text('Community Breakfast at UUSA'),
-            subtitle: Text('Date: Nov 2  Time: 8-10AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Lunch - Amherst Senior Center'),
-            subtitle: Text('Date: Nov 2  Time: 11:45AM - 12:15PM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Fresh Food Distribution - Amherst Survival Center'),
-            subtitle: Text('Date: Nov 2  Time: 12:30PM - 7PM'),
-          ),
-        ),
-
-        Card(
-            child: ListTile(
-              title: Text('Dinner at Craigs Place'),
-              subtitle: Text('Date: Nov 2  Time: 7:30PM - 9PM'),
-            )
-        ),
-        ListTile(
-          title: Text('WEDNESDAY')
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Breakfast at Craigs Place'),
-            subtitle: Text('Date: Nov 3  Time: 7AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Community Breakfast at UUSA'),
-            subtitle: Text('Date: Nov 3  Time: 8-10AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Lunch - Amherst Senior Center'),
-            subtitle: Text('Date: Nov 3  Time: 11:45AM - 12:15PM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Fresh Food Distribution - Amherst Survival Center'),
-            subtitle: Text('Date: Nov 3  Time: 12:30PM - 7PM'),
-          ),
-        ),
-
-        Card(
-            child: ListTile(
-              title: Text('Dinner at Craigs Place'),
-              subtitle: Text('Date: Nov 3  Time: 7:30PM - 9PM'),
-            )
-        ),
-        ListTile(
-          title: Text('THURSDAY'),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Breakfast at Craigs Place'),
-            subtitle: Text('Date: Nov 4  Time: 7AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Community Breakfast at UUSA'),
-            subtitle: Text('Date: Nov 4  Time: 8-10AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Lunch - Amherst Senior Center'),
-            subtitle: Text('Date: Nov 4  Time: 11:45AM - 12:15PM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Fresh Food Distribution - Amherst Survival Center'),
-            subtitle: Text('Date: Nov 4  Time: 12:30PM - 7PM'),
-          ),
-        ),
-
-        Card(
-            child: ListTile(
-              title: Text('Dinner at Craigs Place'),
-              subtitle: Text('Date: Nov 4  Time: 7:30PM - 9PM'),
-            )
-        ),
-        ListTile(
-          title: Text('FRIDAY'),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Breakfast at Craigs Place'),
-            subtitle: Text('Date: Nov 5  Time: 7AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Community Breakfast at UUSA'),
-            subtitle: Text('Date: Nov 5  Time: 8-10AM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Lunch - Amherst Senior Center'),
-            subtitle: Text('Date: Nov 5  Time: 11:45AM - 12:15PM'),
-          ),
-        ),
-
-        Card(
-          child: ListTile(
-            title: Text('Fresh Food Distribution - Amherst Survival Center'),
-            subtitle: Text('Date: Nov 5  Time: 12:30PM - 7PM'),
-          ),
-        ),
-
-        Card(
-            child: ListTile(
-              title: Text('Dinner at Craigs Place'),
-              subtitle: Text('Date: Nov 5  Time: 7:30PM - 9PM'),
-            )
-        ),
-      ],
-    );
-    return _events;
-  }
-
-  Widget _buildRow(WordPair pair) {
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
       ),
     );
   }
