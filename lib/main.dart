@@ -15,13 +15,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<data.User>> users;
   Future<List<data.FoodEvent>> events;
 
   @override
   void initState() {
     super.initState();
-    // users = data.fetchUsers();
     events = data.fetchFoodEvents();
   }
 
