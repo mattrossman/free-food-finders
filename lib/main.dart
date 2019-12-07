@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
               }
 
               // By default, show a loading spinner.
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             },
           ),
         ),
