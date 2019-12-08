@@ -110,6 +110,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  data.FoodEvent _event = new data.FoodEvent();
 
   String validateRequired(value) {
     if (value.isEmpty) {
@@ -133,14 +134,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                 icon: Icon(Icons.star),
                 labelText: 'Name:'
               ),
-              validator: validateRequired
+              validator: validateRequired,
+              onSaved: (val) => setState(() => _event.name = val),
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.location_city),
                 labelText: 'Location:'
               ),
-              validator: validateRequired
+              validator: validateRequired,
+              onSaved: (val) => setState(() => _event.location = val),
             ),
             TextFormField(
               decoration: InputDecoration(

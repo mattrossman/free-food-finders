@@ -5,11 +5,11 @@ import 'dart:async';
 
 
 class FoodEvent {
-  final String name;
-  final String location;
-  final DateTime timestamp;
-  final String description;
-  final List<String> tags;
+  String name;
+  String location;
+  DateTime timestamp;
+  String description;
+  List<String> tags;
 
   FoodEvent({this.name, this.location, this.timestamp, this.description, this.tags});
 
