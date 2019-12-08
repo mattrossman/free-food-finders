@@ -6,7 +6,7 @@ import 'foodevent.dart';
 import 'dart:developer';
 
 class BasicDateTimeField extends StatelessWidget {
-  final format = DateFormat.jm().add_MMMEd();
+  final format = DateFormat.jm().add_MMMEd().add_y();
   final InputDecoration decoration;
   final FormFieldValidator validator;
   final Function(DateTime) onSaved;
