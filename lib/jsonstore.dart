@@ -6,9 +6,11 @@ import 'dart:developer';
 import 'foodevent.dart';
 
 
+const String bucket = '959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476';
+
 Future<List<FoodEvent>> fetchFoodEvents() async {
   final response =
-    await http.get('https://www.jsonstore.io/959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476/events');
+    await http.get('https://www.jsonstore.io/$bucket/events');
 
   if (response.statusCode == 200) {
     // If server returns an OK response, parse the JSON.
@@ -24,7 +26,7 @@ Future<bool> postFoodEvent(FoodEvent event) async {
   log(jsonEncode(event));
   List<FoodEvent> events = await fetchFoodEvents();
   final response =
-    await http.post('https://www.jsonstore.io/959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476/events/${events.length}',
+    await http.post('https://www.jsonstore.io/$bucket/events/${events.length}',
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(event)
   );

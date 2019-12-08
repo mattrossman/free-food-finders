@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'jsonstore.dart';
 import 'foodevent.dart';
+import 'dart:developer';
 
 class BasicDateTimeField extends StatelessWidget {
   final format = DateFormat.jm().add_MMMEd();
@@ -114,7 +115,11 @@ class MyCustomFormState extends State<MyCustomForm> {
               validator: validateRequiredText,
               onSaved: (val) => setState(() => _event.description = val),
             ),
-            EventTags(),
+            EventTagField(
+              onSaved: (val) => setState(() {
+                _event.tags = val;
+              }),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50.0),
               child: RaisedButton(
@@ -144,47 +149,48 @@ class EventTagEntry {
   final String id;
 }
 
-class EventTags extends StatefulWidget {
-  @override
-  State createState() => EventTagsState();
-}
+class EventTagField extends FormField<List<String>> {
 
-class EventTagsState extends State<EventTags> {
-  final List<EventTagEntry> _tagEntries = <EventTagEntry>[
+  static final List<EventTagEntry> _tagEntries = <EventTagEntry>[
     const EventTagEntry('Gluten Free', 'GF'),
     const EventTagEntry('Vegan', 'V'),
     const EventTagEntry('Vegetarian', 'VG')
   ];
-  List<String> _tags = <String>[];
 
-  Iterable<Widget> get actorWidgets sync* {
-    for (EventTagEntry tag in _tagEntries) {
-      yield Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: FilterChip(
-          // avatar: CircleAvatar(child: Text(tag.id)),
-          label: Text(tag.name),
-          selected: _tags.contains(tag.id),
-          onSelected: (bool value) {
-            setState(() {
-              if (value) {
-                _tags.add(tag.id);
-              } else {
-                _tags.removeWhere((String id) {
-                  return id == tag.id;
-                });
-              }
-            });
-          },
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      children: actorWidgets.toList(),
+  EventTagField({
+    FormFieldSetter<List<String>> onSaved,
+    FormFieldValidator<List<String>> validator,
+    List<String> initialValue,
+    bool autovalidate = false})
+    : super(
+        onSaved: onSaved,
+        validator: validator,
+        initialValue: new List<String>(),
+        autovalidate: autovalidate,
+        builder: (FormFieldState<List<String>> state) {
+        return Wrap(
+          children: _tagEntries.map((tag) {
+            return Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: FilterChip(
+                // avatar: CircleAvatar(child: Text(tag.id)),
+                label: Text(tag.name),
+                selected: state.value.contains(tag.id),
+                onSelected: (bool value) {
+                  state.setState(() {
+                    if (value) {
+                      state.value.add(tag.id);
+                    } else {
+                      state.value.removeWhere((String id) {
+                        return id == tag.id;
+                      });
+                    }
+                  });
+                },
+              ),
+            );
+          }).toList(),
+        );
+        }
     );
-  }
 }
