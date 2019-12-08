@@ -100,7 +100,8 @@ class BasicDateTimeField extends StatelessWidget {
   final format = DateFormat.jm().add_MMMEd();
   final InputDecoration decoration;
   final FormFieldValidator validator;
-  BasicDateTimeField({this.decoration, this.validator});
+  final Function(DateTime) onSaved;
+  BasicDateTimeField({this.decoration, this.validator, this.onSaved});
   
   @override
   Widget build(BuildContext context) {
@@ -108,6 +109,7 @@ class BasicDateTimeField extends StatelessWidget {
       format: format,
       decoration: this.decoration,
       validator: this.validator,
+      onSaved: onSaved,
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
             context: context,
@@ -194,13 +196,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                 labelText: 'Time:'
               ),
               validator: validateRequiredDatetime,
+              onSaved: (val) => setState(() => _event.timestamp = val),
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.description),
                 labelText: 'Description:'
               ),
-              validator: validateRequiredText
+              validator: validateRequiredText,
+              onSaved: (val) => setState(() => _event.description = val),
             ),
             EventTags(),
             Padding(
