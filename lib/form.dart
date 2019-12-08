@@ -6,7 +6,7 @@ import 'foodevent.dart';
 import 'dart:developer';
 
 class BasicDateTimeField extends StatelessWidget {
-  final format = DateFormat.jm().add_MMMEd();
+  final format = DateFormat.jm().add_MMMEd().add_y();
   final InputDecoration decoration;
   final FormFieldValidator validator;
   final Function(DateTime) onSaved;
@@ -40,6 +40,20 @@ class BasicDateTimeField extends StatelessWidget {
   }
 }
 
+String validateRequiredText(value) {
+  if (value.isEmpty) {
+    return '*Missing Required Information';
+  }
+  return null;
+} 
+
+String validateRequiredDatetime(value) {
+  if (value == null) {
+    return '*Missing Required Information';
+  }
+  return null;
+} 
+
 // Create a Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
@@ -58,20 +72,6 @@ class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
   FoodEvent _event = new FoodEvent();
   final dateFormat = DateFormat("yyyy-MM-dd");
-
-  String validateRequiredText(value) {
-    if (value.isEmpty) {
-      return '*Missing Required Information';
-    }
-    return null;
-  } 
-
-  String validateRequiredDatetime(value) {
-    if (value == null) {
-      return '*Missing Required Information';
-    }
-    return null;
-  } 
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +151,74 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
+class FoodEventFilter {
+  // Properties of filter that is applied to list of events
+
+  List<String> tags;
+  DateTime timestampFrom;
+  DateTime timestampTo;
+
+  FoodEventFilter({this.tags, this.timestampFrom, this.timestampTo});
+}
+
+class FilterForm extends StatefulWidget {
+  @override
+  _FilterFormState createState() {
+    return _FilterFormState();
+  }
+}
+
+class _FilterFormState extends State<FilterForm> {
+
+  final _filterFormKey = GlobalKey<FormState>();
+  final FoodEventFilter _filter = FoodEventFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _filterFormKey,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            BasicDateTimeField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.date_range),
+                labelText: 'Start time:'
+              ),
+              onSaved: (val) => setState(() => _filter.timestampFrom = val),
+            ),
+            BasicDateTimeField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.date_range),
+                labelText: 'End time:'
+              ),
+              onSaved: (val) => setState(() => _filter.timestampTo = val),
+            ),
+            EventTagField(
+              onSaved: (val) => setState(() => _filter.tags = val),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              child: RaisedButton(
+                child: Text('Submit'),
+                onPressed: () {
+                  final form = _filterFormKey.currentState;
+                  // Validate returns true if the form is valid, or false
+                  // otherwise.
+                  form.save();
+                  Navigator.pop(context, _filter);
+                }
+              ),
+            ),
+          ].toList()
+        ),
+      ),
+    );
+  }
+}
+
 class EventTagEntry {
   const EventTagEntry(this.name, this.id);
   final String name;
@@ -161,8 +229,11 @@ class EventTagField extends FormField<List<String>> {
 
   static final List<EventTagEntry> _tagEntries = <EventTagEntry>[
     const EventTagEntry('Gluten Free', 'GF'),
+    const EventTagEntry('Dairy Free', 'DF'),
     const EventTagEntry('Vegan', 'V'),
-    const EventTagEntry('Vegetarian', 'VG')
+    const EventTagEntry('Vegetarian', 'VG'),
+    const EventTagEntry('Halal', 'H'),
+    const EventTagEntry('Kosher', 'K')
   ];
 
   EventTagField({
@@ -177,6 +248,7 @@ class EventTagField extends FormField<List<String>> {
         autovalidate: autovalidate,
         builder: (FormFieldState<List<String>> state) {
         return Wrap(
+          alignment: WrapAlignment.center,
           children: _tagEntries.map((tag) {
             return Padding(
               padding: const EdgeInsets.all(4.0),

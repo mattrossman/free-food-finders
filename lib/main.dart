@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'jsonstore.dart';
@@ -38,6 +39,16 @@ class _MyAppState extends State<MyApp> {
     return null;
   }
 
+  Widget _buildGroupSeparator(dynamic groupByValue) {
+  
+  return Text(
+    '$groupByValue',
+    textAlign: TextAlign.center,
+    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,6 +59,9 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Events'),
+          actions: <Widget>[
+            FilterButton()
+          ],
         ),
         floatingActionButton: AddEventButton(),
         body: RefreshIndicator(
@@ -57,23 +71,35 @@ class _MyAppState extends State<MyApp> {
             future: events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView(
-                  children: snapshot.data.map((event) {
+                return GroupedListView(
+                  elements: snapshot.data,
+                  groupBy: (element) => DateFormat.EEEE().format(element.timestampFrom),
+                  sort: false,
+                  groupSeparatorBuilder: _buildGroupSeparator,
+                  itemBuilder: (context, event) {
                     String timeFrom = DateFormat.jm().format(event.timestampFrom);
                     String timeTo = DateFormat.jm().format(event.timestampTo);
                     String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
-                      child: ListTile(
-                        title: Text('${event.name}'),
-                        subtitle: Text('$timeFrom-$timeTo $dateFrom at ${event.location}')
-                      )
+                      child: ExpansionTile(
+                        //child: ListTile(
+                        leading: Text('${event.name}',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                        title: Text('$timeFrom-$timeTo\n at ${event.location}',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                        children: <Widget>[Text('${event.description}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]
+                    //),
+
+                      ),
                     );
-                  }).toList()
+                  },
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
-
               // By default, show a loading spinner.
               return Center(child: CircularProgressIndicator());
             },
@@ -122,6 +148,46 @@ class AddEventScreen extends StatelessWidget {
         title: Text('Create Event'),
       ),
       body: MyCustomForm(),
+    );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.filter_list),
+      onPressed: () {
+        _navigateAndDisplaySelection(context);
+      },
+    );
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final FoodEventFilter result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FilterScreen()),
+    );
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    if (result != null) {
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
+    }
+  }
+}
+
+class FilterScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Filters'),
+      ),
+      body: FilterForm(),
     );
   }
 }
