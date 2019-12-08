@@ -59,6 +59,9 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Events'),
+          actions: <Widget>[
+            FilterButton()
+          ],
         ),
         floatingActionButton: AddEventButton(),
         body: RefreshIndicator(
@@ -136,6 +139,46 @@ class AddEventScreen extends StatelessWidget {
         title: Text('Create Event'),
       ),
       body: MyCustomForm(),
+    );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.filter_list),
+      onPressed: () {
+        _navigateAndDisplaySelection(context);
+      },
+    );
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final FoodEventFilter result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FilterScreen()),
+    );
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    if (result != null) {
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
+    }
+  }
+}
+
+class FilterScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Filters'),
+      ),
+      body: FilterForm(),
     );
   }
 }

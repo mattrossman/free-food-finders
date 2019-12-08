@@ -15,7 +15,9 @@ Future<List<FoodEvent>> fetchFoodEvents() async {
   if (response.statusCode == 200) {
     // If server returns an OK response, parse the JSON.
     List<dynamic> res = json.decode(response.body)['result'] ?? const[];
-    return res.map((event) => FoodEvent.fromJson(event)).toList();
+    List<FoodEvent> events = res.map((event) => FoodEvent.fromJson(event)).toList(); 
+    events.sort((a, b) => a.timestampFrom.compareTo(b.timestampFrom));
+    return events;
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load food events');
