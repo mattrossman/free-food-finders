@@ -78,11 +78,20 @@ class _MyAppState extends State<MyApp> {
                     String timeTo = DateFormat.jm().format(event.timestampTo);
                     String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
-                      child: ListTile(
-                          title: Text('${event.name}'),
-                          subtitle: Text('$timeFrom - $timeTo $dateFrom at ${event.location}')
-                        )
-                      );
+                      child: ExpansionTile(
+                        //child: ListTile(
+                        leading: Text('${event.name}',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                        title: Text('$timeFrom-$timeTo\n at ${event.location}',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                        children: <Widget>[Text('${event.description}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]
+                    //),
+
+                      ),
+                    );
                   },
                 );
               } else if (snapshot.hasError) {
