@@ -59,12 +59,13 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.hasData) {
                 return ListView(
                   children: snapshot.data.map((event) {
-                    String date = DateFormat.MMMEd().format(event.timestamp);
-                    String time = DateFormat.jm().format(event.timestamp);
+                    String timeFrom = DateFormat.jm().format(event.timestampFrom);
+                    String timeTo = DateFormat.jm().format(event.timestampTo);
+                    String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
                       child: ListTile(
                         title: Text('${event.name}'),
-                        subtitle: Text('$date at $time - ${event.location}')
+                        subtitle: Text('$timeFrom-$timeTo $dateFrom at ${event.location}')
                       )
                     );
                   }).toList()
