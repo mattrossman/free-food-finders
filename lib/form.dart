@@ -208,7 +208,7 @@ class _FilterFormState extends State<FilterForm> {
                   // Validate returns true if the form is valid, or false
                   // otherwise.
                   form.save();
-                  Navigator.pop(context, 'Applying filter');
+                  Navigator.pop(context, _filter);
                 }
               ),
             ),

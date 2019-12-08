@@ -143,7 +143,7 @@ class FilterButton extends StatelessWidget {
   _navigateAndDisplaySelection(BuildContext context) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    final result = await Navigator.push(
+    final FoodEventFilter result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => FilterScreen()),
     );
@@ -152,7 +152,7 @@ class FilterButton extends StatelessWidget {
     if (result != null) {
       Scaffold.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text("Applying filter")));
+        ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
     }
   }
 }
