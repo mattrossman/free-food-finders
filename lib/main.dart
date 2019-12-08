@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'database.dart' as data;
 
 
@@ -94,6 +95,40 @@ class AddEventButton extends StatelessWidget {
     );
   }
 }
+
+class BasicDateTimeField extends StatelessWidget {
+  final format = DateFormat.jm().add_MMMEd();
+  final InputDecoration decoration;
+  final FormFieldValidator validator;
+  BasicDateTimeField({this.decoration, this.validator});
+  
+  @override
+  Widget build(BuildContext context) {
+    return DateTimeField(
+      format: format,
+      decoration: this.decoration,
+      validator: this.validator,
+      onShowPicker: (context, currentValue) async {
+        final date = await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100));
+        if (date != null) {
+          final time = await showTimePicker(
+            context: context,
+            initialTime:
+                TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+          );
+          return DateTimeField.combine(date, time);
+        } else {
+          return currentValue;
+        }
+      },
+    );
+  }
+}
+
 // Create a Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
@@ -111,9 +146,17 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   data.FoodEvent _event = new data.FoodEvent();
+  final dateFormat = DateFormat("yyyy-MM-dd");
 
-  String validateRequired(value) {
+  String validateRequiredText(value) {
     if (value.isEmpty) {
+      return '*Missing Required Information';
+    }
+    return null;
+  } 
+
+  String validateRequiredDatetime(value) {
+    if (value == null) {
       return '*Missing Required Information';
     }
     return null;
@@ -134,7 +177,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 icon: Icon(Icons.star),
                 labelText: 'Name:'
               ),
-              validator: validateRequired,
+              validator: validateRequiredText,
               onSaved: (val) => setState(() => _event.name = val),
             ),
             TextFormField(
@@ -142,29 +185,22 @@ class MyCustomFormState extends State<MyCustomForm> {
                 icon: Icon(Icons.location_city),
                 labelText: 'Location:'
               ),
-              validator: validateRequired,
+              validator: validateRequiredText,
               onSaved: (val) => setState(() => _event.location = val),
             ),
-            TextFormField(
+            BasicDateTimeField(
               decoration: InputDecoration(
-                icon: Icon(Icons.event),
-                labelText: 'Date:'
-              ),
-              validator: validateRequired
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.timer),
+                icon: Icon(Icons.date_range),
                 labelText: 'Time:'
               ),
-              validator: validateRequired
+              validator: validateRequiredDatetime,
             ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.description),
                 labelText: 'Description:'
               ),
-              validator: validateRequired
+              validator: validateRequiredText
             ),
             EventTags(),
             Padding(
