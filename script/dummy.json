@@ -1,10 +1,26 @@
 [
 	{
-		"name": "Event 1",
-		"location": "Location 1",
-		"timestampFrom": 1575755740,
-		"timestampTo": 1575766740,
-		"description": "Description 1",
-		"tags": ["tag1", "tag2"]
+		"name": "Fresh Food Distribution",
+		"location": "Amherst Survival Center",
+		"timestampFrom": 1575894600,
+		"timestampTo": 1575860400,
+		"description": "",
+		"tags": ["GF", "V", "VG"]
+	},
+	{
+		"name": "Community Breakfast",
+		"location": "Unitarian Universalist Society of Amherst",
+		"timestampFrom": 1576051200,
+		"timestampTo": 1576058400,
+		"description": "Come join us for a breakfast and connect with your local community!",
+		"tags": ["GF", "V", "VG"]
+	},
+	{
+		"name": "Breakfast Bar",
+		"location": "Amherst Survival Center",
+		"timestampFrom": 1576148400,
+		"timestampTo": 1576152000,
+		"description": "Description 3",
+		"tags": ["V"]
 	}
 ]
