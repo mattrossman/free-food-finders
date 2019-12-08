@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                 return GroupedListView(
                   elements: snapshot.data,
                   groupBy: (element) => DateFormat.EEEE().format(element.timestampFrom),
-                  sort: true,
+                  sort: false,
                   groupSeparatorBuilder: _buildGroupSeparator,
                   itemBuilder: (context, event) {
                     String timeFrom = DateFormat.jm().format(event.timestampFrom);
