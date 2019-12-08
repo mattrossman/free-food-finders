@@ -211,12 +211,14 @@ class MyCustomFormState extends State<MyCustomForm> {
               padding: const EdgeInsets.symmetric(vertical: 50.0),
               child: RaisedButton(
                 onPressed: () {
+                  final form = _formKey.currentState;
                   // Validate returns true if the form is valid, or false
                   // otherwise.
-                  if (_formKey.currentState.validate()) {
-                    // If the form is valid, display a Snackbar.
+                  if (form.validate()) {
+                    form.save();
                     Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text('Created Event!')));
+                        .showSnackBar(SnackBar(content: Text('Created Event ${_event.name}!')));
+                    data.postFoodEvent(_event);
                   }
                 },
                 child: Text('Submit'),
