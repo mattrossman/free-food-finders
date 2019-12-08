@@ -13,7 +13,7 @@
 		"timestampFrom": 1576069200,
 		"timestampTo": 1576076400,
 		"description": "Come join us for a breakfast and connect with your local community!",
-		"tags": ["GF", "V", "VG"]
+		"tags": ["GF", "V", "VG", "K"]
 	},
 	{
 		"name": "Breakfast Bar",
@@ -21,6 +21,6 @@
 		"timestampFrom": 1576166400,
 		"timestampTo": 1576170000,
 		"description": "A Bar of Breakfast! Truly technology has come far.",
-		"tags": ["V"]
+		"tags": ["V", "H", "K"]
 	}
 ]

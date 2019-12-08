@@ -180,6 +180,7 @@ class EventTagField extends FormField<List<String>> {
         autovalidate: autovalidate,
         builder: (FormFieldState<List<String>> state) {
         return Wrap(
+          alignment: WrapAlignment.center,
           children: _tagEntries.map((tag) {
             return Padding(
               padding: const EdgeInsets.all(4.0),

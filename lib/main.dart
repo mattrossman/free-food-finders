@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'jsonstore.dart';
@@ -38,6 +39,16 @@ class _MyAppState extends State<MyApp> {
     return null;
   }
 
+  Widget _buildGroupSeparator(dynamic groupByValue) {
+  
+  return Text(
+    '$groupByValue',
+    textAlign: TextAlign.center,
+    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,23 +68,26 @@ class _MyAppState extends State<MyApp> {
             future: events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView(
-                  children: snapshot.data.map((event) {
+                return GroupedListView(
+                  elements: snapshot.data,
+                  groupBy: (element) => DateFormat.EEEE().format(element.timestampFrom),
+                  sort: true,
+                  groupSeparatorBuilder: _buildGroupSeparator,
+                  itemBuilder: (context, event) {
                     String timeFrom = DateFormat.jm().format(event.timestampFrom);
                     String timeTo = DateFormat.jm().format(event.timestampTo);
                     String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
                       child: ListTile(
-                        title: Text('${event.name}'),
-                        subtitle: Text('$timeFrom-$timeTo $dateFrom at ${event.location}')
-                      )
-                    );
-                  }).toList()
+                          title: Text('${event.name}'),
+                          subtitle: Text('$timeFrom - $timeTo $dateFrom at ${event.location}')
+                        )
+                      );
+                  },
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
-
               // By default, show a loading spinner.
               return Center(child: CircularProgressIndicator());
             },
