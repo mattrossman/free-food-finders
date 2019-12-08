@@ -102,10 +102,18 @@ class MyCustomFormState extends State<MyCustomForm> {
             BasicDateTimeField(
               decoration: InputDecoration(
                 icon: Icon(Icons.date_range),
-                labelText: 'Time:'
+                labelText: 'Start time:'
               ),
               validator: validateRequiredDatetime,
-              onSaved: (val) => setState(() => _event.timestamp = val),
+              onSaved: (val) => setState(() => _event.timestampFrom = val),
+            ),
+            BasicDateTimeField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.date_range),
+                labelText: 'End time:'
+              ),
+              validator: validateRequiredDatetime,
+              onSaved: (val) => setState(() => _event.timestampTo = val),
             ),
             TextFormField(
               decoration: InputDecoration(

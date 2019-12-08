@@ -2,22 +2,9 @@
 	{
 		"name": "Event 1",
 		"location": "Location 1",
-		"timestamp": 1575755740,
+		"timestampFrom": 1575755740,
+		"timestampTo": 1575766740,
 		"description": "Description 1",
 		"tags": ["tag1", "tag2"]
-	},
-	{
-		"name": "Event 2",
-		"location": "Location 2",
-		"timestamp": 1575755809,
-		"description": "Description 2",
-		"tags": ["tag3", "tag4"]
-	},
-	{
-		"name": "Event 3",
-		"location": "Location 3",
-		"timestamp": 1575755809,
-		"description": "Description 3",
-		"tags": ["tag2", "tag3"]
 	}
 ]
