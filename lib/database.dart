@@ -39,7 +39,7 @@ Future<List<FoodEvent>> fetchFoodEvents() async {
 
   if (response.statusCode == 200) {
     // If server returns an OK response, parse the JSON.
-    List<dynamic> res = json.decode(response.body)['result'];
+    List<dynamic> res = json.decode(response.body)['result'] ?? const[];
     return res.map((event) => FoodEvent.fromJson(event)).toList();
   } else {
     // If that response was not OK, throw an error.
@@ -49,8 +49,9 @@ Future<List<FoodEvent>> fetchFoodEvents() async {
 
 Future<bool> postFoodEvent(FoodEvent event) async {
   log(jsonEncode(event));
+  List<FoodEvent> events = await fetchFoodEvents();
   final response =
-    await http.post('https://www.jsonstore.io/959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476/events/0',
+    await http.post('https://www.jsonstore.io/959e4e7e2c37c98a703fab508a1c94cbc02f0c12d451d7d5e0131264f49fe476/events/${events.length}',
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(event)
   );
