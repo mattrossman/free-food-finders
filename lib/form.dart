@@ -161,8 +161,11 @@ class EventTagField extends FormField<List<String>> {
 
   static final List<EventTagEntry> _tagEntries = <EventTagEntry>[
     const EventTagEntry('Gluten Free', 'GF'),
+    const EventTagEntry('Dairy Free', 'DF'),
     const EventTagEntry('Vegan', 'V'),
-    const EventTagEntry('Vegetarian', 'VG')
+    const EventTagEntry('Vegetarian', 'VG'),
+    const EventTagEntry('Halal', 'H'),
+    const EventTagEntry('Kosher', 'K')
   ];
 
   EventTagField({
