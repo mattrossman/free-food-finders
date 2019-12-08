@@ -124,9 +124,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                   // otherwise.
                   if (form.validate()) {
                     form.save();
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text('Created Event ${_event.name}!')));
                     postFoodEvent(_event);
+                    Navigator.pop(context, 'Created Event ${_event.name}!');
                   }
                 },
                 child: Text('Submit'),

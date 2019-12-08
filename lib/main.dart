@@ -12,6 +12,8 @@ import 'form.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
+  static _MyAppState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<_MyAppState>());
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -86,18 +88,32 @@ class AddEventButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddEvent()),
-        );
+        _navigateAndDisplaySelection(context);
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.green,
     );
   }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddEventScreen()),
+    );
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    if (result != null) {
+      await MyApp.of(context).refreshList();
+      Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text("$result")));
+    }
+  }
 }
 
-class AddEvent extends StatelessWidget {
+class AddEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
