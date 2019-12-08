@@ -4,32 +4,35 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'database.dart' as data;
+import 'jsonstore.dart';
+import 'foodevent.dart';
+import 'form.dart';
 
 
 void main() => runApp(MyApp());
-bool pressAttention = false;
 
 class MyApp extends StatefulWidget {
+  static _MyAppState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<_MyAppState>());
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<data.FoodEvent>> events;
+  Future<List<FoodEvent>> events;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    events = data.fetchFoodEvents();
+    events = fetchFoodEvents();
   }
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
 
     setState(() {
-      events = data.fetchFoodEvents();
+      events = fetchFoodEvents();
     });
 
     return null;
@@ -50,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         body: RefreshIndicator(
           key: refreshKey,
           onRefresh: refreshList,
-          child: FutureBuilder<List<data.FoodEvent>>(
+          child: FutureBuilder<List<FoodEvent>>(
             future: events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -85,145 +88,39 @@ class AddEventButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddEvent()),
-        );
+        _navigateAndDisplaySelection(context);
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.green,
     );
   }
-}
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.star),
-              labelText: 'Name:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.location_city),
-              labelText: 'Location:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.event),
-              labelText: 'Date:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.timer),
-              labelText: 'Time:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              icon: Icon(Icons.description),
-              labelText: 'Description:'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return '*Missing Required Information';
-              }
-              return null;
-            },
-          ),
-          RaisedButton(
-            child: new Text('Vegan'),
-            textColor: Colors.black,
-            shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0),
-            ),
-          color: pressAttention ? Colors.white : Colors.green,
-          onPressed: () => setState(() => pressAttention = !pressAttention),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Created Event!')));
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ),
-        ],
-      ),
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddEventScreen()),
     );
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    if (result != null) {
+      await MyApp.of(context).refreshList();
+      Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text("$result")));
+    }
   }
 }
-class AddEvent extends StatelessWidget {
+
+class AddEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Event'),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: MyCustomForm(),
-        ),
-      )
+      body: MyCustomForm(),
     );
   }
-  
 }
