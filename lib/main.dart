@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'database.dart' as data;
+import 'database.dart';
 
 
 void main() => runApp(MyApp());
@@ -16,20 +16,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<data.FoodEvent>> events;
+  Future<List<FoodEvent>> events;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    events = data.fetchFoodEvents();
+    events = fetchFoodEvents();
   }
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
 
     setState(() {
-      events = data.fetchFoodEvents();
+      events = fetchFoodEvents();
     });
 
     return null;
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         body: RefreshIndicator(
           key: refreshKey,
           onRefresh: refreshList,
-          child: FutureBuilder<List<data.FoodEvent>>(
+          child: FutureBuilder<List<FoodEvent>>(
             future: events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -147,7 +147,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  data.FoodEvent _event = new data.FoodEvent();
+  FoodEvent _event = new FoodEvent();
   final dateFormat = DateFormat("yyyy-MM-dd");
 
   String validateRequiredText(value) {
@@ -218,7 +218,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form.save();
                     Scaffold.of(context)
                         .showSnackBar(SnackBar(content: Text('Created Event ${_event.name}!')));
-                    data.postFoodEvent(_event);
+                    postFoodEvent(_event);
                   }
                 },
                 child: Text('Submit'),
@@ -292,5 +292,4 @@ class AddEvent extends StatelessWidget {
       body: MyCustomForm(),
     );
   }
-  
 }
