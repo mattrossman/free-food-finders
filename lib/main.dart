@@ -40,13 +40,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _buildGroupSeparator(dynamic groupByValue) {
-  
-  return Text(
-    '$groupByValue',
-    textAlign: TextAlign.center,
-    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+    return Padding(
+      child: Text(
+        '$groupByValue',
+        style: TextStyle(
+          fontSize: 25
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(20, 30, 10, 10),
     );
-
   }
 
   @override
@@ -73,26 +75,54 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.hasData) {
                 return GroupedListView(
                   elements: snapshot.data,
-                  groupBy: (element) => DateFormat.EEEE().format(element.timestampFrom),
+                  groupBy: (element) => DateFormat.EEEE().add_MMM().add_d().format(element.timestampFrom),
                   sort: false,
                   groupSeparatorBuilder: _buildGroupSeparator,
                   itemBuilder: (context, event) {
-                    String timeFrom = DateFormat.jm().format(event.timestampFrom);
+                    String timeFrom = DateFormat.j().format(event.timestampFrom);
                     String timeTo = DateFormat.jm().format(event.timestampTo);
-                    String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
+                    // String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
                       child: ExpansionTile(
-                        //child: ListTile(
-                        leading: Text('${event.name}',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        title: Text('$timeFrom-$timeTo\n at ${event.location}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                        children: <Widget>[Text('${event.description}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]
-                    //),
-
+                        title: Column(
+                          children: [
+                            Row(
+                              children: <Widget>[
+                                Text('${event.name}'),
+                                Spacer(),
+                                Text('$timeFrom - $timeTo',
+                                  style: TextStyle(fontSize: 14)
+                                ),
+                              ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text('${event.location}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54
+                                  )
+                                ),
+                                Spacer(),
+                                Text('')
+                              ],
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                            ),
+                          ]
+                        ),
+                        // What will be seen upon expansion:
+                        children: <Widget>[
+                          // Divider(),
+                          ListTile(title: Text('${event.description}'),)
+                          // Padding(
+                          //   child: Text('${event.description}',
+                          //     // textAlign: TextAlign.left
+                          //   ),
+                          //   padding: EdgeInsets.all(10)
+                          // ),
+                        ],
+                        // trailing: SizedBox(width: 0, height: 0,),
                       ),
                     );
                   },
