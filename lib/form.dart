@@ -185,14 +185,14 @@ class _FilterFormState extends State<FilterForm> {
             BasicDateTimeField(
               decoration: InputDecoration(
                 icon: Icon(Icons.date_range),
-                labelText: 'Start time:'
+                labelText: 'From:'
               ),
               onSaved: (val) => setState(() => _filter.timestampFrom = val),
             ),
             BasicDateTimeField(
               decoration: InputDecoration(
                 icon: Icon(Icons.date_range),
-                labelText: 'End time:'
+                labelText: 'To:'
               ),
               onSaved: (val) => setState(() => _filter.timestampTo = val),
             ),
@@ -202,7 +202,7 @@ class _FilterFormState extends State<FilterForm> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50.0),
               child: RaisedButton(
-                child: Text('Submit'),
+                child: Text('Apply'),
                 onPressed: () {
                   final form = _filterFormKey.currentState;
                   // Validate returns true if the form is valid, or false
