@@ -84,26 +84,27 @@ class _MyAppState extends State<MyApp> {
                     // String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
                     return Card(
                       child: ExpansionTile(
-                        title: Row(
+                        title: Column(
                           children: [
-                            Column(
+                            Row(
                               children: <Widget>[
                                 Text('${event.name}'),
+                                Spacer(),
+                                Text('$timeFrom - $timeTo',
+                                  style: TextStyle(fontSize: 14)
+                                ),
+                              ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                            Row(
+                              children: <Widget>[
                                 Text('${event.location}',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54
                                   )
-                                )
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            ),
-                            Spacer(),
-                            Column(
-                              children: <Widget>[
-                                Text('$timeFrom - $timeTo',
-                                  style: TextStyle(fontSize: 14)
                                 ),
+                                Spacer(),
                                 Text('')
                               ],
                               crossAxisAlignment: CrossAxisAlignment.end,
