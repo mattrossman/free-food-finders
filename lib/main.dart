@@ -41,6 +41,10 @@ class _MyAppState extends State<MyApp> {
 
   List<FoodEvent> applyFilter(List<FoodEvent> events) {
     List<FoodEvent> out = List<FoodEvent>.from(events);
+    // Remove historial events
+    out = out.where((event) => event.timestampFrom.isAfter(DateTime.now())).toList();
+
+    // Potential user-applied filters
     if (_filter.timestampFrom != null) {
       out = out.where((event) => event.timestampFrom.isAfter(_filter.timestampFrom)).toList();
     }
