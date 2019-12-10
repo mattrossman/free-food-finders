@@ -158,7 +158,7 @@ class FoodEventFilter {
   DateTime timestampFrom;
   DateTime timestampTo;
 
-  FoodEventFilter({this.tags, this.timestampFrom, this.timestampTo});
+  FoodEventFilter({this.tags = const[], this.timestampFrom, this.timestampTo});
 }
 
 class FilterForm extends StatefulWidget {

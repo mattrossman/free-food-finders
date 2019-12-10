@@ -44,6 +44,11 @@ class _MyAppState extends State<MyApp> {
     if (_filter.timestampTo != null) {
       out = out.where((event) => event.timestampTo.isBefore(_filter.timestampTo)).toList();
     }
+    if (_filter.tags.length > 0) {
+      Set<String> filterSet = Set<String>.from(_filter.tags);
+      Function(FoodEvent) matchesTags = (event) => Set<String>.from(event.tags).containsAll(filterSet);
+      out = out.where(matchesTags).toList();
+    }
     return out;
   }
 
