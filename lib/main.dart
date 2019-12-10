@@ -112,7 +112,25 @@ class _MyAppState extends State<MyApp> {
         ),
         // What will be seen upon expansion:
         children: <Widget>[
-          ListTile(title: Text('${event.description}'),)
+          ListTile(
+            title: Text('Description'),
+            subtitle: Text('${event.description}')
+          ),
+          ListTile(
+            title: Text('Tags'),
+            subtitle: Padding(
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                children: <Widget>[
+                  CircleAvatar(
+                    child: Text('VG'),
+                    radius: 16,
+                  )
+                ],
+              ),
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+            )
+          )
         ],
       ),
     );
