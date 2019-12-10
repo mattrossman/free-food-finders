@@ -10,6 +10,9 @@ import 'foodevent.dart';
 import 'form.dart';
 import 'dart:developer';
 
+// const theme = const Color(0xff881c1c);
+Color colorAccent = Colors.blueAccent;
+Color colorMain = Colors.orange;
 
 void main() => runApp(MyApp());
 
@@ -145,7 +148,8 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Events'),
+          title: Text('Free Food Events'),
+          backgroundColor: colorMain,
           actions: <Widget>[
             FilterButton()
           ],
@@ -186,7 +190,7 @@ class AddEventButton extends StatelessWidget {
         _navigateAndDisplaySelection(context);
       },
       child: Icon(Icons.add),
-      backgroundColor: Colors.green,
+      backgroundColor: colorAccent,
     );
   }
 
@@ -214,6 +218,7 @@ class AddEventScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Event'),
+        backgroundColor: colorMain,
       ),
       body: MyCustomForm(),
     );
@@ -255,6 +260,7 @@ class FilterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Filters'),
+        backgroundColor: colorMain,
       ),
       body: FilterForm(),
     );
