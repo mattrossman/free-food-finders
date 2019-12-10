@@ -118,18 +118,18 @@ class _MyAppState extends State<MyApp> {
           ),
           ListTile(
             title: Text('Tags'),
-            subtitle: Padding(
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                children: <Widget>[
-                  CircleAvatar(
-                    child: Text('VG'),
+            subtitle: Wrap(
+              alignment: WrapAlignment.start,
+              children: event.tags.map((tag) {
+                return Padding(
+                  child: CircleAvatar(
+                    child: Text(tag),
                     radius: 16,
-                  )
-                ],
-              ),
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-            )
+                  ),
+                  padding: EdgeInsets.all(6),
+                );
+              }).toList(),
+            ),
           )
         ],
       ),
