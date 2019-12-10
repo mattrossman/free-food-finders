@@ -123,6 +123,13 @@ class MyCustomFormState extends State<MyCustomForm> {
               validator: validateRequiredText,
               onSaved: (val) => setState(() => _event.description = val),
             ),
+            Padding(padding: EdgeInsets.only(top: 20),
+              child: Text('The food served is:',
+                style: TextStyle(
+                  fontSize: 16
+                ),
+              )
+            ),
             EventTagField(
               onSaved: (val) => setState(() {
                 _event.tags = val;
@@ -182,6 +189,13 @@ class _FilterFormState extends State<FilterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Padding(padding: EdgeInsets.only(top: 20),
+              child: Text('Show events between:',
+                style: TextStyle(
+                  fontSize: 16
+                ),
+              )
+            ),
             BasicDateTimeField(
               decoration: InputDecoration(
                 icon: Icon(Icons.date_range),
@@ -195,6 +209,13 @@ class _FilterFormState extends State<FilterForm> {
                 labelText: 'To:'
               ),
               onSaved: (val) => setState(() => _filter.timestampTo = val),
+            ),
+            Padding(padding: EdgeInsets.only(top: 50),
+              child: Text('Food must be:',
+                style: TextStyle(
+                  fontSize: 16
+                ),
+              )
             ),
             EventTagField(
               onSaved: (val) => setState(() => _filter.tags = val),
