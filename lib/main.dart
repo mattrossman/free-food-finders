@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'jsonstore.dart';
 import 'foodevent.dart';
 import 'form.dart';
+import 'dart:developer';
 
 
 void main() => runApp(MyApp());
@@ -20,33 +21,119 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<FoodEvent>> events;
+  Future<List<FoodEvent>> _events;
+  FoodEventFilter _filter;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    events = fetchFoodEvents();
+    _events = fetchFoodEvents();
+    _filter = new FoodEventFilter();
+  }
+
+  void updateFilter(FoodEventFilter filter) {
+    _filter = filter;
+  }
+
+  List<FoodEvent> applyFilter(List<FoodEvent> events) {
+    List<FoodEvent> out = List<FoodEvent>.from(events);
+    if (_filter.timestampFrom != null) {
+      out = out.where((event) => event.timestampFrom.isAfter(_filter.timestampFrom)).toList();
+    }
+    if (_filter.timestampTo != null) {
+      out = out.where((event) => event.timestampTo.isBefore(_filter.timestampTo)).toList();
+    }
+    if (_filter.tags.length > 0) {
+      Set<String> filterSet = Set<String>.from(_filter.tags);
+      Function(FoodEvent) matchesTags = (event) => Set<String>.from(event.tags).containsAll(filterSet);
+      out = out.where(matchesTags).toList();
+    }
+    return out;
   }
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
 
     setState(() {
-      events = fetchFoodEvents();
+      _events = fetchFoodEvents();
     });
 
     return null;
   }
 
   Widget _buildGroupSeparator(dynamic groupByValue) {
-  
-  return Text(
-    '$groupByValue',
-    textAlign: TextAlign.center,
-    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+    return Padding(
+      child: Text(
+        '$groupByValue',
+        style: TextStyle(
+          fontSize: 25
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(20, 30, 10, 10),
     );
+  }
 
+  Widget _buildListItem(BuildContext context, FoodEvent event) {
+    String timeFrom = DateFormat.j().format(event.timestampFrom);
+    String timeTo = DateFormat.jm().format(event.timestampTo);
+    // String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
+    return Card(
+      child: ExpansionTile(
+        title: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                Text('${event.name}'),
+                Spacer(),
+                Text('$timeFrom - $timeTo',
+                  style: TextStyle(fontSize: 14)
+                ),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Row(
+              children: <Widget>[
+                Text('${event.location}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54
+                  )
+                ),
+                Spacer(),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.end,
+            ),
+          ]
+        ),
+        // What will be seen upon expansion:
+        children: <Widget>[
+          ListTile(
+            title: Text('Description'),
+            subtitle: Text('${event.description}')
+          ),
+          ListTile(
+            title: Text('Tags'),
+            subtitle: Wrap(
+              alignment: WrapAlignment.start,
+              children: event.tags.map((tag) {
+                return Padding(
+                  child: CircleAvatar(
+                    child: Text(
+                      tag,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    radius: 16,
+                    backgroundColor: tagToColor(tag),
+                  ),
+                  padding: EdgeInsets.all(6),
+                );
+              }).toList(),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -68,34 +155,15 @@ class _MyAppState extends State<MyApp> {
           key: refreshKey,
           onRefresh: refreshList,
           child: FutureBuilder<List<FoodEvent>>(
-            future: events,
+            future: _events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return GroupedListView(
-                  elements: snapshot.data,
-                  groupBy: (element) => DateFormat.EEEE().format(element.timestampFrom),
+                  elements: applyFilter(snapshot.data),
+                  groupBy: (element) => DateFormat.EEEE().add_MMM().add_d().format(element.timestampFrom),
                   sort: false,
                   groupSeparatorBuilder: _buildGroupSeparator,
-                  itemBuilder: (context, event) {
-                    String timeFrom = DateFormat.jm().format(event.timestampFrom);
-                    String timeTo = DateFormat.jm().format(event.timestampTo);
-                    String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
-                    return Card(
-                      child: ExpansionTile(
-                        //child: ListTile(
-                        leading: Text('${event.name}',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        title: Text('$timeFrom-$timeTo\n at ${event.location}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                        children: <Widget>[Text('${event.description}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]
-                    //),
-
-                      ),
-                    );
-                  },
+                  itemBuilder: _buildListItem,
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
@@ -173,6 +241,7 @@ class FilterButton extends StatelessWidget {
     // After the Selection Screen returns a result, hide any previous snackbars
     // and show the new result.
     if (result != null) {
+      MyApp.of(context).updateFilter(result);
       Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
