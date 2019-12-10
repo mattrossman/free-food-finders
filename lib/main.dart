@@ -24,6 +24,10 @@ class _MyAppState extends State<MyApp> {
   Future<List<FoodEvent>> _events;
   FoodEventFilter _filter;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
+  Map<String, Color> tagColors = {
+    'V': Colors.green,
+    'DF': Colors.red,
+  };
 
   @override
   void initState() {
@@ -74,6 +78,46 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Widget _buildListItem(BuildContext context, FoodEvent event) {
+    String timeFrom = DateFormat.j().format(event.timestampFrom);
+    String timeTo = DateFormat.jm().format(event.timestampTo);
+    // String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
+    return Card(
+      child: ExpansionTile(
+        title: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                Text('${event.name}'),
+                Spacer(),
+                Text('$timeFrom - $timeTo',
+                  style: TextStyle(fontSize: 14)
+                ),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Row(
+              children: <Widget>[
+                Text('${event.location}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54
+                  )
+                ),
+                Spacer(),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.end,
+            ),
+          ]
+        ),
+        // What will be seen upon expansion:
+        children: <Widget>[
+          ListTile(title: Text('${event.description}'),)
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -101,54 +145,7 @@ class _MyAppState extends State<MyApp> {
                   groupBy: (element) => DateFormat.EEEE().add_MMM().add_d().format(element.timestampFrom),
                   sort: false,
                   groupSeparatorBuilder: _buildGroupSeparator,
-                  itemBuilder: (context, event) {
-                    String timeFrom = DateFormat.j().format(event.timestampFrom);
-                    String timeTo = DateFormat.jm().format(event.timestampTo);
-                    // String dateFrom = DateFormat.MMMEd().format(event.timestampFrom);
-                    return Card(
-                      child: ExpansionTile(
-                        title: Column(
-                          children: [
-                            Row(
-                              children: <Widget>[
-                                Text('${event.name}'),
-                                Spacer(),
-                                Text('$timeFrom - $timeTo',
-                                  style: TextStyle(fontSize: 14)
-                                ),
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Text('${event.location}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54
-                                  )
-                                ),
-                                Spacer(),
-                                Text('')
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                            ),
-                          ]
-                        ),
-                        // What will be seen upon expansion:
-                        children: <Widget>[
-                          // Divider(),
-                          ListTile(title: Text('${event.description}'),)
-                          // Padding(
-                          //   child: Text('${event.description}',
-                          //     // textAlign: TextAlign.left
-                          //   ),
-                          //   padding: EdgeInsets.all(10)
-                          // ),
-                        ],
-                        // trailing: SizedBox(width: 0, height: 0,),
-                      ),
-                    );
-                  },
+                  itemBuilder: _buildListItem,
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
