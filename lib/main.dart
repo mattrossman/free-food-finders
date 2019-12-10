@@ -24,10 +24,6 @@ class _MyAppState extends State<MyApp> {
   Future<List<FoodEvent>> _events;
   FoodEventFilter _filter;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  Map<String, Color> tagColors = {
-    'V': Colors.green,
-    'DF': Colors.red,
-  };
 
   @override
   void initState() {
@@ -123,8 +119,12 @@ class _MyAppState extends State<MyApp> {
               children: event.tags.map((tag) {
                 return Padding(
                   child: CircleAvatar(
-                    child: Text(tag),
+                    child: Text(
+                      tag,
+                      style: TextStyle(color: Colors.white),
+                    ),
                     radius: 16,
+                    backgroundColor: tagToColor(tag),
                   ),
                   padding: EdgeInsets.all(6),
                 );

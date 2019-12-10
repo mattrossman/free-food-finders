@@ -220,21 +220,29 @@ class _FilterFormState extends State<FilterForm> {
 }
 
 class EventTagEntry {
-  const EventTagEntry(this.name, this.id);
+  const EventTagEntry(this.name, this.id, this.color);
   final String name;
   final String id;
+  final Color color;
+}
+
+final List<EventTagEntry> filterTagEntries = <EventTagEntry>[
+  const EventTagEntry('Gluten Free', 'GF', Colors.lightBlue),
+  const EventTagEntry('Dairy Free', 'DF', Colors.blue),
+  const EventTagEntry('Vegan', 'V', Colors.lightGreen),
+  const EventTagEntry('Vegetarian', 'VG', Colors.green),
+  const EventTagEntry('Halal', 'H', Colors.orange),
+  const EventTagEntry('Kosher', 'K', Colors.brown)
+];
+
+
+Color tagToColor(String tag) {
+  // This is a disgusting hack
+  EventTagEntry match = filterTagEntries.where((t) => t.id == tag).first;
+  return match.color;
 }
 
 class EventTagField extends FormField<List<String>> {
-
-  static final List<EventTagEntry> _tagEntries = <EventTagEntry>[
-    const EventTagEntry('Gluten Free', 'GF'),
-    const EventTagEntry('Dairy Free', 'DF'),
-    const EventTagEntry('Vegan', 'V'),
-    const EventTagEntry('Vegetarian', 'VG'),
-    const EventTagEntry('Halal', 'H'),
-    const EventTagEntry('Kosher', 'K')
-  ];
 
   EventTagField({
     FormFieldSetter<List<String>> onSaved,
@@ -249,7 +257,7 @@ class EventTagField extends FormField<List<String>> {
         builder: (FormFieldState<List<String>> state) {
         return Wrap(
           alignment: WrapAlignment.center,
-          children: _tagEntries.map((tag) {
+          children: filterTagEntries.map((tag) {
             return Padding(
               padding: const EdgeInsets.all(4.0),
               child: FilterChip(
