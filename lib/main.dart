@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'jsonstore.dart';
 import 'foodevent.dart';
 import 'form.dart';
+import 'dart:developer';
 
 
 void main() => runApp(MyApp());
@@ -20,20 +21,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<List<FoodEvent>> events;
+  Future<List<FoodEvent>> _events;
+  FoodEventFilter _filter;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    events = fetchFoodEvents();
+    _events = fetchFoodEvents();
+    _filter = new FoodEventFilter();
+  }
+
+  void updateFilter(FoodEventFilter filter) {
+    _filter = filter;
+  }
+
+  List<FoodEvent> applyFilter(List<FoodEvent> events) {
+    List<FoodEvent> out = List<FoodEvent>.from(events);
+    if (_filter.timestampFrom != null) {
+      out = out.where((event) => event.timestampFrom.isAfter(_filter.timestampFrom)).toList();
+    }
+    if (_filter.timestampTo != null) {
+      out = out.where((event) => event.timestampTo.isBefore(_filter.timestampTo)).toList();
+    }
+    return out;
   }
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
 
     setState(() {
-      events = fetchFoodEvents();
+      _events = fetchFoodEvents();
     });
 
     return null;
@@ -70,11 +88,11 @@ class _MyAppState extends State<MyApp> {
           key: refreshKey,
           onRefresh: refreshList,
           child: FutureBuilder<List<FoodEvent>>(
-            future: events,
+            future: _events,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return GroupedListView(
-                  elements: snapshot.data,
+                  elements: applyFilter(snapshot.data),
                   groupBy: (element) => DateFormat.EEEE().add_MMM().add_d().format(element.timestampFrom),
                   sort: false,
                   groupSeparatorBuilder: _buildGroupSeparator,
@@ -203,6 +221,7 @@ class FilterButton extends StatelessWidget {
     // After the Selection Screen returns a result, hide any previous snackbars
     // and show the new result.
     if (result != null) {
+      MyApp.of(context).updateFilter(result);
       Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
