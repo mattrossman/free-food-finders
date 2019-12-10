@@ -253,7 +253,7 @@ class FilterButton extends StatelessWidget {
       MyApp.of(context).updateFilter(result);
       Scaffold.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text("Applying tags: ${result.tags.toString()}")));
+        ..showSnackBar(SnackBar(content: Text("Applying filter")));
     }
   }
 }

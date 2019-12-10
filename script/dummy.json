@@ -1,26 +1,60 @@
 [
 	{
-		"name": "Fresh Food Distribution",
-		"location": "Amherst Survival Center",
-		"timestampFrom": 1575912600,
-		"timestampTo": 1575921600,
 		"description": "Distributing fresh food to help you survive!",
-		"tags": ["GF", "V", "VG"]
-	},
-	{
-		"name": "Community Breakfast",
-		"location": "Unitarian Universalist Society of Amherst",
-		"timestampFrom": 1576069200,
-		"timestampTo": 1576076400,
-		"description": "Come join us for a breakfast and connect with your local community!",
-		"tags": ["GF", "V", "VG", "K"]
-	},
-	{
-		"name": "Breakfast Bar",
 		"location": "Amherst Survival Center",
-		"timestampFrom": 1576166400,
-		"timestampTo": 1576170000,
+		"name": "Fresh Food Distribution",
+		"tags": [
+			"GF",
+			"V",
+			"VG"
+		],
+		"timestampFrom": 1575912600,
+		"timestampTo": 1575921600
+	},
+	{
+		"description": "Come join us for a breakfast and connect with your local community!",
+		"location": "Unitarian Universalist Society of Amherst",
+		"name": "Community Breakfast",
+		"tags": [
+			"GF",
+			"V",
+			"VG",
+			"K"
+		],
+		"timestampFrom": 1576069200,
+		"timestampTo": 1576076400
+	},
+	{
 		"description": "A Bar of Breakfast! Truly technology has come far.",
-		"tags": ["V", "H", "K"]
+		"location": "Amherst Survival Center",
+		"name": "Breakfast Bar",
+		"tags": [
+			"V",
+			"H",
+			"K"
+		],
+		"timestampFrom": 1576166400,
+		"timestampTo": 1576170000
+	},
+	{
+		"description": "Free pizza and soda hand fed to you by Darlene Fahey",
+		"location": "CS Building",
+		"name": "Free Pizza",
+		"tags": [
+			"VG"
+		],
+		"timestampFrom": 1576083600,
+		"timestampTo": 1576087200
+	},
+	{
+		"description": "All you can eat goose, bring your own roasting equipment.",
+		"location": "Campus pond",
+		"name": "Roasted goose",
+		"tags": [
+			"GF",
+			"DF"
+		],
+		"timestampFrom": 1576267200,
+		"timestampTo": 1576274400
 	}
 ]

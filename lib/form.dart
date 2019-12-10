@@ -145,7 +145,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   if (form.validate()) {
                     form.save();
                     postFoodEvent(_event);
-                    Navigator.pop(context, 'Created Event ${_event.name}!');
+                    Navigator.pop(context, 'Created Event "${_event.name}!"');
                   }
                 },
                 child: Text('Submit'),
